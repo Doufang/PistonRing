@@ -92,13 +92,6 @@ END_MESSAGE_MAP()
 
 CPistonRingDlg::CPistonRingDlg(CWnd* pParent /*=NULL*/)
 : CDialogEx(CPistonRingDlg::IDD, pParent)
-, mValueFeedingOKNumber(0)
-, mValueFeedingNGNumber(0)
-, mValueClearanceOKNumber(0)
-, mValueClearanceNGNumber(0)
-, m_LeakyCheckResult(_T("待检"))
-, m_PositionResult(_T("待检"))
-, m_ClearanceCheckResult(_T("待检"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -106,28 +99,8 @@ CPistonRingDlg::CPistonRingDlg(CWnd* pParent /*=NULL*/)
 void CPistonRingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Radio(pDX, IDC_RADIO1, mValueFeedingSystemSwitch);
-	DDV_MinMaxInt(pDX, mValueFeedingSystemSwitch, 0, 1);
-	DDX_Radio(pDX, IDC_RADIO3, mValueLeakySystemSwitch);
-	DDV_MinMaxInt(pDX, mValueLeakySystemSwitch, 0, 1);
-	DDX_Radio(pDX, IDC_RADIO5, mValueClearanceSystemSwitch);
-	DDV_MinMaxInt(pDX, mValueClearanceSystemSwitch, 0, 1);
-	DDX_Radio(pDX, IDC_RADIO7, mValueUnloadingSystemSwith);
-	DDV_MinMaxInt(pDX, mValueUnloadingSystemSwith, 0, 1);
-	DDX_Radio(pDX, IDC_RADIO9, mValueRotarySystemSwitch);
-	DDV_MinMaxInt(pDX, mValueRotarySystemSwitch, 0, 1);
-	DDX_Text(pDX, IDC_EDIT1, mValueFeedingOKNumber);
-	DDX_Text(pDX, IDC_EDIT2, mValueFeedingNGNumber);
-	DDX_Text(pDX, IDC_EDIT3, mValueClearanceOKNumber);
-	DDX_Text(pDX, IDC_EDIT4, mValueClearanceNGNumber);
-	DDX_Control(pDX, IDC_EDIT1, mControlFeedingOKNumber);
-	DDX_Control(pDX, IDC_EDIT2, mControlFeedingNGNumber);
-	DDX_Control(pDX, IDC_EDIT3, mControlClearanceOKNumber);
-	DDX_Control(pDX, IDC_EDIT4, mControlClearanceNGNumber);
 	DDX_Control(pDX, IDC_MSCOMM1, g_CommXDM.myComm);
-	DDX_Text(pDX, IDC_STATIC025, m_LeakyCheckResult);
-	DDX_Text(pDX, IDC_STATIC026, m_PositionResult);
-	DDX_Text(pDX, IDC_STATIC027, m_ClearanceCheckResult);
+
 }
 
 BEGIN_MESSAGE_MAP(CPistonRingDlg, CDialogEx)
@@ -139,24 +112,7 @@ BEGIN_MESSAGE_MAP(CPistonRingDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_TIMER()
 	ON_COMMAND(ID_PLC32772, &CPistonRingDlg::OnPlcSetting)
-	ON_BN_CLICKED(IDC_RADIO2, &CPistonRingDlg::OnBnClickedRadio2)
-	ON_BN_CLICKED(IDC_RADIO1, &CPistonRingDlg::OnBnClickedRadio1)
-	ON_BN_CLICKED(IDC_RADIO4, &CPistonRingDlg::OnBnClickedRadio4)
-	ON_BN_CLICKED(IDC_RADIO3, &CPistonRingDlg::OnBnClickedRadio3)
-	ON_BN_CLICKED(IDC_RADIO6, &CPistonRingDlg::OnBnClickedRadio6)
-	ON_BN_CLICKED(IDC_RADIO5, &CPistonRingDlg::OnBnClickedRadio5)
-	ON_BN_CLICKED(IDC_RADIO8, &CPistonRingDlg::OnBnClickedRadio8)
-	ON_BN_CLICKED(IDC_RADIO7, &CPistonRingDlg::OnBnClickedRadio7)
-	ON_BN_CLICKED(IDC_RADIO10, &CPistonRingDlg::OnBnClickedRadio10)
-	ON_BN_CLICKED(IDC_RADIO9, &CPistonRingDlg::OnBnClickedRadio9)
-	ON_BN_CLICKED(IDC_BUTTON1, &CPistonRingDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CPistonRingDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CPistonRingDlg::OnBnClickedButton3)
-	ON_BN_CLICKED(IDC_BUTTON4, &CPistonRingDlg::OnBnClickedButton4)
-	ON_BN_CLICKED(IDC_BUTTON9, &CPistonRingDlg::OnBnClickedButton9)
-	ON_BN_CLICKED(IDC_BUTTON10, &CPistonRingDlg::OnBnClickedButton10)
-	ON_BN_CLICKED(IDC_BUTTON11, &CPistonRingDlg::OnBnClickedButton11)
-	ON_BN_CLICKED(IDC_BUTTON12, &CPistonRingDlg::OnBnClickedButton12)
+
 	ON_MESSAGE(WM_USER_GRAB_FINISHED, &CPistonRingDlg::OnUserGrabFished)
 	ON_MESSAGE(WM_USER_START_CHECK_LEAKEY, &CPistonRingDlg::OnUserStratCheckLeakey)
 	ON_MESSAGE(WM_USER_LEAKEY_FINISHED, &CPistonRingDlg::OnUserLeakeyFished)
@@ -356,30 +312,7 @@ HBRUSH CPistonRingDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetTextColor(RGB(255, 0, 0));		//用RGB宏改变颜色
 		DialogFontSetting(pDC, 400);
 		break;
-	case IDC_BUTTON1:
-		
-		break;
-	case IDC_BUTTON2:
-
-		break;
-	case IDC_BUTTON3:
-
-		break;
-	case IDC_BUTTON4:
-
-		break;
-	case IDC_BUTTON9:
-
-		break;
-	case IDC_BUTTON10:
-
-		break;
-	case IDC_BUTTON11:
-
-		break;
-	case IDC_BUTTON12:
-
-		break;
+	
 	default:
 		break;
 	}
@@ -438,10 +371,6 @@ void CPistonRingDlg::DialogFontSetting(CDC* pDC, int nPointSet)
 void CPistonRingDlg::MyEditFontSet()
 {
 	mMyEditFont.CreatePointFont(250, L"宋体");
-	mControlFeedingOKNumber.SetFont(&mMyEditFont);
-	mControlFeedingNGNumber.SetFont(&mMyEditFont);
-	mControlClearanceOKNumber.SetFont(&mMyEditFont);
-	mControlClearanceNGNumber.SetFont(&mMyEditFont);
 }
 
 //定时器响应
@@ -589,159 +518,6 @@ void CPistonRingDlg::OnPlcSetting()
 	myPlC->Create(IDD_PLC, this);
 	myPlC->ShowWindow(SW_SHOW);
 }
-
-//上料系统打开
-void CPistonRingDlg::OnBnClickedRadio2(){}
-
-//上料系统关闭
-void CPistonRingDlg::OnBnClickedRadio1(){}
-
-
-//漏光检测打开
-void CPistonRingDlg::OnBnClickedRadio4(){}
-
-//漏光检测关闭
-void CPistonRingDlg::OnBnClickedRadio3(){}
-
-//间隙检测打开
-void CPistonRingDlg::OnBnClickedRadio6(){}
-
-//间隙检测关闭
-void CPistonRingDlg::OnBnClickedRadio5(){}
-
-//下料系统打开
-void CPistonRingDlg::OnBnClickedRadio8(){}
-
-//下料系统关闭
-void CPistonRingDlg::OnBnClickedRadio7(){}
-
-//旋转台打开
-void CPistonRingDlg::OnBnClickedRadio10(){}
-
-//旋转台关闭
-void CPistonRingDlg::OnBnClickedRadio9(){}
-
-//手动按钮
-void CPistonRingDlg::OnBnClickedButton1()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	g_AutoRun = false;
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(300), 0);
-	g_CsCommXDM.Unlock();
-}
-
-//自动按钮
-void CPistonRingDlg::OnBnClickedButton2()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	g_AutoRun = true;
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(300), 1);
-	g_CsCommXDM.Unlock();
-}
-
-//运行按钮
-void CPistonRingDlg::OnBnClickedButton3()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	KillTimer(1);
-	KillTimer(2);
-	KillTimer(3);
-
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(301), 1);
-	g_CsCommXDM.Unlock();
-	SetTimer(4, 100, NULL);
-	//if (g_Running)
-	//{
-	//	PostMessage(WM_USER_START_CHECK_LEAKEY, 0, 0);
-	//	PostMessage(WM_USER_START_LOCATION, 0, 0);
-	//}
-}
-
-//停止按钮
-void CPistonRingDlg::OnBnClickedButton4()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(302), 1);
-	g_CsCommXDM.Unlock();
-	g_Running = false;
-	
-	SetTimer(1, 50, NULL);
-	SetTimer(2, 50, NULL);
-	SetTimer(3, 100, NULL);
-}
-
-//暂停按钮
-void CPistonRingDlg::OnBnClickedButton9(){}
-
-//继续按钮
-void CPistonRingDlg::OnBnClickedButton10(){}
-
-//急停按钮
-void CPistonRingDlg::OnBnClickedButton11()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	g_Running = false;
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(305), 1);
-	g_CsCommXDM.Unlock();
-}
-
-//复位按钮
-void CPistonRingDlg::OnBnClickedButton12()
-{
-	// TODO:  在此添加控件通知处理程序代码
-	g_CsCommXDM.Lock();
-	g_CommXDM.WriteCommRelay(PLCM(306), 1);
-	g_CommXDM.WriteCommRelay(PLCM(306), 0);
-	g_CsCommXDM.Unlock();
-}
-
-//UINT ThreadComm(LPVOID pParam)
-//{
-//	ThreadParmsComm* ptp = (ThreadParmsComm*)pParam;
-//	HWND m_hWnd = ptp->hWnd;
-//	SerialComm* comm = ptp->comm;
-//	bool& Running = *(ptp->running);
-//	CCriticalSection* pCriticalSection = ptp->pCS;
-//	delete ptp;
-//	
-//	bool read1 = false;
-//	bool read2 = false;
-//	bool read3 = false;
-//	while (Running)
-//	{
-//		pCriticalSection->Lock();
-//		read1 = comm->ReadCommRelay(PLCM(1000), 40, g_ReadBool);
-//		read2 = comm->ReadCommWord(PLCD(0), 20, g_ReadWord);
-//		read3 = comm->ReadCommDword(PLCD(100), 20, g_ReadDword);
-//		pCriticalSection->Unlock();
-//		if (read1 || read2 || read3)
-//		{
-//			PostMessage(m_hWnd, WM_USER_COMM_FINISHED, 0, 0);
-//		}
-//		if (!(read1 && read2 && read3))
-//		{
-//			PostMessage(m_hWnd, WM_USER_COMM_ERROR, 0, 0);
-//		}
-//		read1 = read2 = read3 = false;
-//		Sleep(1000);
-//	}
-//	return 0;
-//}
-
-//LRESULT CPistonRingDlg::CommFished(WPARAM wParam, LPARAM lParam)
-//{
-//	return 0;
-//}
-//
-//LRESULT CPistonRingDlg::CommError(WPARAM wParam, LPARAM lParam)
-//{
-//	return 0;
-//}
 
 
 //创建通用线程
