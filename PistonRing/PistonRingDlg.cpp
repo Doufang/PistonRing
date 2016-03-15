@@ -92,6 +92,14 @@ END_MESSAGE_MAP()
 
 CPistonRingDlg::CPistonRingDlg(CWnd* pParent /*=NULL*/)
 : CDialogEx(CPistonRingDlg::IDD, pParent)
+, m_LeakeyCheckNumber(0)
+, m_LeakeyRunTime(0)
+, m_PositionRunTime(0)
+, m_ClearanceRunTime(0)
+, m_TotalCount(0)
+, m_OKCount(0)
+, m_LeakeyCount(0)
+, m_ClearanceCount(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -100,7 +108,17 @@ void CPistonRingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_MSCOMM1, g_CommXDM.myComm);
-
+	DDX_Control(pDX, IDC_STATIC025, m_CheckLeakeyStateShow);
+	DDX_Control(pDX, IDC_STATIC026, m_CheckLocationStateShow);
+	DDX_Control(pDX, IDC_STATIC027, m_CheckClearanceStateShow);
+	DDX_Text(pDX, IDC_EDIT1, m_LeakeyCheckNumber);
+	DDX_Text(pDX, IDC_EDIT2, m_LeakeyRunTime);
+	DDX_Text(pDX, IDC_EDIT3, m_PositionRunTime);
+	DDX_Text(pDX, IDC_EDIT4, m_ClearanceRunTime);
+	DDX_Text(pDX, IDC_EDIT5, m_TotalCount);
+	DDX_Text(pDX, IDC_EDIT10, m_OKCount);
+	DDX_Text(pDX, IDC_EDIT11, m_LeakeyCount);
+	DDX_Text(pDX, IDC_EDIT12, m_ClearanceCount);
 }
 
 BEGIN_MESSAGE_MAP(CPistonRingDlg, CDialogEx)
@@ -113,15 +131,6 @@ BEGIN_MESSAGE_MAP(CPistonRingDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_PLC32772, &CPistonRingDlg::OnPlcSetting)
 
-	ON_MESSAGE(WM_USER_GRAB_FINISHED, &CPistonRingDlg::OnUserGrabFished)
-	ON_MESSAGE(WM_USER_START_CHECK_LEAKEY, &CPistonRingDlg::OnUserStratCheckLeakey)
-	ON_MESSAGE(WM_USER_LEAKEY_FINISHED, &CPistonRingDlg::OnUserLeakeyFished)
-	ON_MESSAGE(WM_USER_START_LOCATION, &CPistonRingDlg::OnUserStartLocation)
-	ON_MESSAGE(WM_USER_LOCATION_FINISHED, &CPistonRingDlg::OnUserLocationFished)
-	ON_MESSAGE(WM_USER_START_CLEARANCE, &CPistonRingDlg::OnUserStartClearance)
-	ON_MESSAGE(WM_USER_CLEARANCE_FINISHED, &CPistonRingDlg::OnUserClearanceFished)	
-	//ON_MESSAGE(WM_USER_COMM_FINISHED, &CPistonRingDlg::CommFished)
-	//ON_MESSAGE(WM_USER_COMM_ERROR, &CPistonRingDlg::CommError)
 END_MESSAGE_MAP()
 
 
@@ -161,11 +170,15 @@ BOOL CPistonRingDlg::OnInitDialog()
 	oldFSP[0] = 1350;
 	oldFSP[1] = 768;
 	ShowWindow(SW_MAXIMIZE);
+
+	//设置窗口字体
 	MyEditFontSet();
 
+	//通讯初始化
 	g_CommXDM.OpenMyComm(1);
 	m_maskImage = cvLoadImage("00.bmp", 0);
 	
+	//相机初始化
 	g_CameraLeakey.CameraInit("192.168.3.100", 2000, 20, 1600, 1200);
 	SetTimer(1, 50, NULL);
 	g_CameraLocation.CameraInit("192.168.2.100", 2000, 60, 640, 480);
@@ -173,10 +186,10 @@ BOOL CPistonRingDlg::OnInitDialog()
 	g_CameraClearance.CameraInit("192.168.4.100", 3000, 10, 2500, 1900);
 	SetTimer(3, 100, NULL);
 
-	m_commRunning = true;
-	m_tRunState = AfxBeginThread(ThreadRunState, (LPVOID)(&m_commRunning));
+	//开启通讯监控线程
 
 
+	//对话框变化控制
 	ResizeControl = false;
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -254,7 +267,6 @@ void CPistonRingDlg::OnClose()
 	case 1:
 		KillTimer(1);
 		g_Running = false;
-		m_commRunning = false;
 		Sleep(1000);
 
 		g_CsCommXDM.Lock();
@@ -298,21 +310,23 @@ HBRUSH CPistonRingDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	// TODO:  在此更改 DC 的任何特性
 	switch (pWnd->GetDlgCtrlID())
 	{
-	case IDC_STATIC020:
-	case IDC_STATIC021:
-	case IDC_STATIC022:
-	case IDC_STATIC023:
-	case IDC_STATIC024:
+	case IDC_STATIC1:
+	case IDC_STATIC2:
+	case IDC_STATIC3:
+	case IDC_STATIC4:
+	case IDC_STATIC5:
+	case IDC_STATIC6:
+	case IDC_STATIC7:
+	case IDC_STATIC8:
 		pDC->SetTextColor(RGB(0, 0, 255));		//用RGB宏改变颜色
-		DialogFontSetting(pDC, 250);
+		DialogFontSetting(pDC, 140);
 		break;
 	case IDC_STATIC025:
 	case IDC_STATIC026:
 	case IDC_STATIC027:		
 		pDC->SetTextColor(RGB(255, 0, 0));		//用RGB宏改变颜色
 		DialogFontSetting(pDC, 400);
-		break;
-	
+		break;	
 	default:
 		break;
 	}
@@ -359,18 +373,26 @@ void CPistonRingDlg::OnSize(UINT nType, int cx, int cy)
 	}
 }
 
-//字体设置
+//标签字体大小设置
 void CPistonRingDlg::DialogFontSetting(CDC* pDC, int nPointSet)
 {
-	mLableStateFont = new CFont;
-	mLableStateFont->CreatePointFont(nPointSet, L"宋体");
-	pDC->SelectObject(mLableStateFont);
-	mLableStateFont->DeleteObject();
+	mLableStateFont.CreatePointFont(nPointSet, L"宋体");
+	pDC->SelectObject(&mLableStateFont);
+	mLableStateFont.DeleteObject();
 }
 
+//设置Edit字体
 void CPistonRingDlg::MyEditFontSet()
 {
 	mMyEditFont.CreatePointFont(250, L"宋体");
+	GetDlgItem(IDC_EDIT1)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT2)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT3)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT4)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT5)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT10)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT11)->SetFont(&mMyEditFont);
+	GetDlgItem(IDC_EDIT12)->SetFont(&mMyEditFont);
 }
 
 //定时器响应
@@ -562,146 +584,6 @@ void CPistonRingDlg::CameraInitCreate(
 
 }
 
-//图片采集完成消息
-LRESULT CPistonRingDlg::OnUserGrabFished(WPARAM wParam, LPARAM lParam)
-{
-	CameraBasler& camera = *((CameraBasler*)lParam);
-	switch (camera.cameraWidth)
-	{
-	case 640:
-		g_CsLocation.Lock();
-		DrawPicToHDC(g_CameraLocation.myImage, IDC_STATIC_CAMERA30);
-		g_CsLocation.Unlock();
-		break;
-	case 1600:
-		g_CsLeakey.Lock();
-		DrawPicToHDC(g_CameraLeakey.myImage, IDC_STATIC_CAMERA200);
-		g_CsLeakey.Unlock();
-		break;
-	case 2500:
-		g_CsClearance.Lock();
-		DrawPicToHDC(g_CameraClearance.myImage, IDC_STATIC_CAMERA500);
-		g_CsClearance.Unlock();
-		break;
-	default:
-		break;
-	}
-	return 0;
-}
-
-//开始检漏光消息
-LRESULT CPistonRingDlg::OnUserStratCheckLeakey(WPARAM wParam, LPARAM lParam)
-{
-
-	ThreadCreate(ThreadCheckLeakey, &g_CommXDM, &g_CsCommXDM,
-		&g_CameraLeakey, &g_CsLeakey, &g_Running, 100);
-
-	return 0;
-}
-
-//漏光检测完成消息
-LRESULT CPistonRingDlg::OnUserLeakeyFished(WPARAM wParam, LPARAM lParam)
-{
-	int n = (int)wParam;
-
-	return 0;
-}
-
-//开始定位消息
-LRESULT CPistonRingDlg::OnUserStartLocation(WPARAM wParam, LPARAM lParam)
-{
-	
-	ThreadCreate(ThreadCheakLocation, &g_CommXDM, &g_CsCommXDM,
-		&g_CameraLocation, &g_CsLocation, &g_Running);
-	
-	return 0;
-}
-
-//定位完成消息
-LRESULT CPistonRingDlg::OnUserLocationFished(WPARAM wParam, LPARAM lParam)
-{
-	
-	return 0;
-}
-
-//开始检测间隙消息
-LRESULT CPistonRingDlg::OnUserStartClearance(WPARAM wParam, LPARAM lParam)
-{
-	
-	ThreadCreate(ThreadCheakClearance, &g_CommXDM, &g_CsCommXDM,
-		&g_CameraClearance, &g_CsClearance, &g_Running);
-	
-	return 0;
-}
-
-//间隙检测完成消息
-LRESULT CPistonRingDlg::OnUserClearanceFished(WPARAM wParam, LPARAM lParam)
-{
-	
-	return 0;
-}
-
-
-//UINT ThreadCheckLeakey(LPVOID pParam)
-//{
-//	ThreadParms* ptp = (ThreadParms*)pParam;
-//	HWND m_hWnd = ptp->hWnd;
-//	delete ptp;
-//
-//	uint16_t n = 0;
-//	int result = 0;
-//	while (g_Running)
-//	{
-//		while (g_Running)
-//		{
-//			g_CsCommXDM.Lock();
-//			g_CommXDM.ReadCommWord(PLCHD(1420), 1, &n);
-//			g_CsCommXDM.Unlock();
-//			if (n == 1)
-//			{
-//				g_CsCommXDM.Lock();
-//				g_CommXDM.WriteCommRelay(PLCM(1520), 1);
-//				g_CsCommXDM.Unlock();
-//				break;
-//			}
-//		}
-//
-//		bool b = false;
-//		do
-//		{
-//			g_CsLeakey.Lock();
-//			g_CameraLeakey.GrabImage();
-//			IplImage* img = cvCreateImage(cvSize(g_CameraLeakey.myImage->width, g_CameraLeakey.myImage->height), IPL_DEPTH_8U, 1);
-//			memset(img->imageData, 0, img->height*img->widthStep*sizeof(unsigned char));
-//			cvCopy(g_CameraLeakey.myImage, img);
-//			result = OnNewvision(img, m_maskImage);
-//			PostMessage(m_hWnd, WM_USER_GRAB_FINISHED, 0, (LPARAM)(&g_CameraLeakey));
-//			g_CsLeakey.Unlock();
-//			if (result == -1)
-//			{
-//				g_CsCommXDM.Lock();
-//				g_CommXDM.WriteCommWord(PLCHD(1421), 2);
-//				g_CsCommXDM.Unlock();
-//				break;
-//			}
-//
-//			g_CsCommXDM.Lock();
-//			g_CommXDM.ReadCommRelay(PLCM(1425), 1, &b);
-//			g_CsCommXDM.Unlock();
-//		} while (!b);
-//
-//		g_CsCommXDM.Lock();
-//		g_CommXDM.WriteCommRelay(PLCM(1426), 1);
-//		g_CsCommXDM.Unlock();
-//
-//		if (!g_AutoRun)
-//		{
-//			break;
-//		}
-//	}
-//
-//	return 0;
-//}
 
 //图片采集线程
 UINT ThreadCameraGrab(LPVOID pParam)
@@ -784,7 +666,7 @@ UINT ThreadCheckLeakey(LPVOID pParam)
 			csComm.Unlock();		
 			if (!run) return 1;
 		} while (!check);
-		PostMessage(hWnd, WM_USER_LEAKEY_FINISHED, (WPARAM)result, 0);
+
 		if (result != -1)
 		{
 			csComm.Lock();
@@ -872,9 +754,9 @@ UINT ThreadCheakLocation(LPVOID pParam)
 			if (!run) return 1;
 			Sleep(10);
 		} while (!position);
-		PostMessage(hWnd, WM_USER_LOCATION_FINISHED, 0, 0);
+
 		//发送开始检测间隙消息。
-		PostMessage(hWnd, WM_USER_START_CLEARANCE, 0, 0);
+
 		//判断是否需要继续运行
 		csComm.Lock();
 		comm.ReadCommRelay(PLCM(351), 1, &run);
@@ -909,7 +791,7 @@ UINT ThreadCheakClearance(LPVOID pParam)
 	comm.WriteCommRelay(PLCM(1436), 1);
 	comm.ReadCommRelay(PLCM(351), 1, &run);
 	csComm.Unlock();
-	PostMessage(hWnd, WM_USER_CLEARANCE_FINISHED, 0, 0);
+
 
 	return 0;
 }

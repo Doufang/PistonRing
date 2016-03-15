@@ -39,8 +39,6 @@ using namespace cv;
 
 #define WM_USER_GRAB_FINISHED WM_USER + 0x100
 
-#define WM_USER_COMM_FINISHED WM_USER + 0x110
-#define WM_USER_COMM_ERROR WM_USER + 0x111
 
 
 
@@ -98,7 +96,7 @@ public:
 	void DialogFontSetting(CDC* pDC, int nPointSet);	//用于设置标签的字体
 	void MyEditFontSet();	//
 	float oldFSP[2];		//用于记录窗体的原始大小
-	CFont *mLableStateFont, mMyEditFont;	
+	CFont mLableStateFont, mMyEditFont;	
 
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
@@ -129,23 +127,18 @@ public:
 public:
 	PLCSetting* myPlC;
 	afx_msg void OnPlcSetting();	
+	CStatic m_CheckLeakeyStateShow;
+	CStatic m_CheckLocationStateShow;
+	CStatic m_CheckClearanceStateShow;
 
-	//线程消息
-protected:
-	afx_msg LRESULT OnUserGrabFished(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserStratCheckLeakey(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserLeakeyFished(WPARAM wParam, LPARAM lParam);	
-	afx_msg LRESULT OnUserStartLocation(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserLocationFished(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserStartClearance(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserClearanceFished(WPARAM wParam, LPARAM lParam);
-
-	afx_msg LRESULT OnUserCommFished(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnUserCommError(WPARAM wParam, LPARAM lParam);
-
-	protected:
-		CWinThread* m_tRunState;
-		bool m_commRunning;
+	UINT m_LeakeyCheckNumber;
+	UINT m_LeakeyRunTime;
+	UINT m_PositionRunTime;
+	UINT m_ClearanceRunTime;
+	UINT m_TotalCount;
+	UINT m_OKCount;
+	UINT m_LeakeyCount;
+	UINT m_ClearanceCount;
 };
 
 //多线程传递参数

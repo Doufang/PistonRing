@@ -76,58 +76,6 @@ int otsu(cv::Mat dst)
 
 }
 
-//void MeasureMethod(Mat& img, MEASURERESULT *mearsureGroup, int funcFlag)//funcFlag 1: set 2: measure
-//{
-//	cv::Mat MeasureImage;
-//	if (img.channels() == 3)
-//		cv::cvtColor(img, MeasureImage, CV_RGB2GRAY);
-//	else
-//		MeasureImage = img.clone();
-//
-//	int width, height;
-//	height = MeasureImage.rows;//cols是列数，相当于width
-//	width = MeasureImage.cols; //rows是行数，相当于height
-//	int thd = otsu(MeasureImage);
-//
-//	int i, j;
-//	for (i = 0; i < height; i++)
-//	{
-//		for (j = 0; j< width; j++)
-//		{
-//			if (MeasureImage.at<uchar>(i, j) > thd)
-//				MeasureImage.at<uchar>(i, j) = MAX_GRAY_VALUE - 1;
-//			else
-//				MeasureImage.at<uchar>(i, j) = MIN_GRAY_VALUE;
-//		}
-//	}
-//
-//	Mat row1 = MeasureImage.rowRange(mearsureGroup->positon[0], mearsureGroup->positon[0] + 1).clone();
-//
-//	Mat row2 = MeasureImage.rowRange(mearsureGroup->positon[1], mearsureGroup->positon[1] + 1).clone();
-//
-//	Mat row3 = MeasureImage.rowRange(mearsureGroup->positon[2], mearsureGroup->positon[2] + 1).clone();
-//
-//	getMaxDistance(row1, mearsureGroup->group[0]);
-//	getMaxDistance(row2, mearsureGroup->group[1]);
-//	getMaxDistance(row3, mearsureGroup->group[2]);
-//
-//	float tempMean = 0;
-//	tempMean = (mearsureGroup->group[0][0] + mearsureGroup->group[1][0] + mearsureGroup->group[2][0]) / 3.0;
-//
-//
-//	if (funcFlag)
-//	{
-//		if (tempMean != 0 && mearsureGroup->icircle != 0)
-//			mearsureGroup->ippixel = mearsureGroup->icircle / tempMean;
-//		else
-//			mearsureGroup->ippixel = 1.0;
-//		return;
-//	}
-//
-//	mearsureGroup->lastResult = mearsureGroup->ippixel * tempMean;
-//
-//}
-
 void JDDetect(IplImage* sourceImage)
 {
 	const int max_corners = 3;

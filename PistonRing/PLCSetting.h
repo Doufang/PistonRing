@@ -9,14 +9,6 @@ extern CCriticalSection g_CsCommXDM;
 extern bool& g_AutoRun;
 extern bool& g_Running;
 
-#define WM_USER_START_CHECK_LEAKEY WM_USER + 0x101
-#define WM_USER_LEAKEY_FINISHED WM_USER + 0x102
-
-#define WM_USER_START_LOCATION WM_USER + 0x103
-#define WM_USER_LOCATION_FINISHED WM_USER + 0x104
-
-#define WM_USER_START_CLEARANCE WM_USER + 0x105
-#define WM_USER_CLEARANCE_FINISHED WM_USER + 0x106
 
 // PLCSetting ¶Ô»°¿ò
 

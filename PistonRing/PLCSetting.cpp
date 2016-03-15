@@ -236,7 +236,7 @@ void PLCSetting::OnBnClickedButton2()
 	// TODO:  在此添加控件通知处理程序代码
 	g_AutoRun = false;
 	g_Running = true;
-	m_pParentWnd->PostMessageW(WM_USER_START_CHECK_LEAKEY, 0, 0);
+
 	g_CsCommXDM.Lock();
 	g_CommXDM.WriteCommRelay(PLCM(461), 1);
 	g_CsCommXDM.Unlock();
@@ -249,7 +249,7 @@ void PLCSetting::OnBnClickedButton3()
 	// TODO:  在此添加控件通知处理程序代码
 	g_AutoRun = false;
 	g_Running = true;
-	m_pParentWnd->PostMessageW(WM_USER_START_LOCATION, 0, 0);
+
 	g_CsCommXDM.Lock();
 	g_CommXDM.WriteCommRelay(PLCM(462), 1);
 	g_CsCommXDM.Unlock();
