@@ -1,0 +1,6 @@
+
+LIBRARY	"BasleGrab"
+
+EXPORTS
+  GrabImage  
+  FilterAllRegionRectList

@@ -1,0 +1,38 @@
+LIBRARY	"Utility"
+  
+EXPORTS
+  Utility_getApplicationPath
+  Utility_getApplicationDir
+  Utility_GetCurTimeStr
+  Utility_GetCurTimeStrFormat
+  Utility_getMonthStr
+  Utility_getDayStr
+  Utility_CreateDirByPath
+  Utility_getDirByPath
+  Utility_getFileNameByPath
+  
+  StartTime
+  EndTime
+  
+  OpenIniFile
+  CloseIniFile
+  WriteIniFile
+  
+  ReadFileBool
+  ReadFileInt
+  ReadFileFloat
+  ReadFileDouble
+  ReadFileString
+  ReadFileFloatArray
+  
+  WriteFileBool
+  WriteFileInt
+  WriteFileFloat
+  WriteFileDouble
+  WriteFileString
+  WriteFileFloatArray
+  
+  MemCheckStartPoint
+  MemCheckEndPoint
+  MemDumpStatistics
+   

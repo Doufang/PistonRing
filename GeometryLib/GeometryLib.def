@@ -1,0 +1,12 @@
+LIBRARY	"GeometryLib"
+
+EXPORTS
+  DotDotDis
+  DotDotLine
+  DotDotAngle
+  DotLineDis
+  LineLineDis
+  DotLineDisAbs
+  LineLineDotDis
+  LineLineIntersection
+  LineLineIncludeAngle

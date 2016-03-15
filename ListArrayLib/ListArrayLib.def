@@ -1,0 +1,114 @@
+LIBRARY	"ListArrayLib"
+
+EXPORTS
+  MallocArrayInt
+  AddArrayInt
+  InsertArrayInt
+  EraseArrayInt
+  ClearArrayInt
+  FreeArrayInt
+  CopyArrayInt
+  
+  MallocArrayChar
+  AddArrayChar
+  InsertArrayChar
+  EraseArrayChar
+  ClearArrayChar
+  FreeArrayChar
+  CopyArrayChar
+  
+  MallocArrayBlobInfo
+  AddArrayBlobInfo
+  InsertArrayBlobInfo
+  EraseArrayBlobInfo
+  ClearArrayBlobInfo
+  FreeArrayBlobInfo
+  CopyArrayBlobInfo
+  
+  MallocArrayFloat
+  AddArrayFloat
+  InsertArrayFloat
+  EraseArrayFloat
+  ClearArrayFloat
+  FreeArrayFloat
+  CopyArrayFloat
+  
+  MallocArrayPoint
+  AddArrayPoint
+  InsertArrayPoint
+  EraseArrayPoint
+  ClearArrayPoint
+  FreeArrayPoint
+  CopyArrayPoint
+  CopyArrayPointForNotFreeSrc
+  
+  MallocArrayPointPair
+  AddArrayPointPair
+  InsertArrayPointPair
+  EraseArrayPointPair
+  ClearArrayPointPair
+  FreeArrayPointPair
+  CopyArrayPointPair
+  
+  MallocArrayPointF
+  AddArrayPointF
+  InsertArrayPointF
+  EraseArrayPointF
+  ClearArrayPointF
+  FreeArrayPointF
+  CopyArrayPointF
+  
+  MallocArrayLine
+  AddArrayLine
+  InsertArrayLine
+  EraseArrayLine
+  ClearArrayLine
+  FreeArrayLine
+  CopyArrayLine
+  
+  MallocArrayCircle
+  AddArrayCircle
+  InsertArrayCircle
+  EraseArrayCircle
+  ClearArrayCircle
+  FreeArrayCircle
+  CopyArrayCircle
+  
+  MallocArrayRect
+  AddArrayRect
+  InsertArrayRect
+  EraseArrayRect
+  ClearArrayRect
+  FreeArrayRect
+  CopyArrayRect
+  
+  MallocArrayOCR
+  AddArrayOCR
+  InsertArrayOCR
+  EraseArrayOCR
+  ClearArrayOCR
+  FreeArrayOCR
+  CopyArrayOCR
+  
+  MallocArrayRectObj
+  AddArrayRectObj
+  InsertArrayRectObj
+  EraseArrayRectObj
+  ClearArrayRectObj
+  FreeArrayRectObj
+  CopyArrayRectObj
+  
+  MallocArrayRectMsg
+  AddArrayRectMsg
+  InsertArrayRectMsg
+  EraseArrayRectMsg
+  ClearArrayRectMsg
+  FreeArrayRectMsg
+  CopyArrayRectMsg
+  
+  MallocArrayTwoPointPair
+  AddArrayTwoPointPair
+  InsertArrayTwoPointPair
+  EraseArrayTwoPointPair
+  ClearArrayTwoPointPair
+  FreeArrayTwoPointPair

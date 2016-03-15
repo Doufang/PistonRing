@@ -1,0 +1,46 @@
+LIBRARY	"ImagePre"
+
+EXPORTS
+  AdaptiveStretchImage
+  MarkEdgeIplImageForRectBorder
+  TraceEdgeForIplImageModel
+  ExtractMaxEdgePointNumForItem
+  ExtractAllEdgePointNumForItem
+  
+  FilterEdgeRegionRectList
+  FilterAllRegionRectList
+  
+  FilterMaxRegionForImage
+  FilterBlobNoiseForRect
+  FilterRegionListForRect
+  FilterHeightWidthRegionForRect
+  FilterMaxHeightWidthRegionForRect
+  
+  FilterMaxRectRegion
+  FilterMaxRegionForRectImage
+  
+  cvAdaptiveDevision
+  
+  cvFixThreshold
+  cvFixThreshold_Inverse
+  
+  cvFixThreshold_Three
+  cvFixBottomThreshold_Three
+  
+  FixThresholdForBottomImage
+  
+  ProbDevisionImageByLow
+  ProbDevisionImageByHigh
+  
+  cvAdaptiveDevisionImageByProb
+  
+  OstuThreshold
+  PathContrastForRectImage
+  PathContrastForMarkImage
+  
+  FilterAreaEdgeRatioForRect
+  
+  cvDilationImage
+  cvErosionImage
+  
+  cvDrawSectorM

@@ -1,0 +1,32 @@
+LIBRARY	"ObjectLib"
+
+EXPORTS
+  FitCircleObj
+  RansacCirclePoint
+  RansacCirclePointForLess
+  
+  FitLineObj
+  RansacLinePoint
+  RansacLinePointForLess
+  RansacLinePointForEdge
+   
+  SortPointsListByXValue
+  
+  GetConvexPointByListPoint
+  GetMinimumEnclosedRectangle
+  
+  QuickHullAlgorithmForListPoint
+  
+  RansacLinePointPair
+  RansacLineTwoDimPointPair
+  
+  RansacPointPairClustering
+  
+  RansacEllipsePoints
+  FitEllipseObj
+  
+  MergeRectMsgList
+  MergeRectListForInt
+  MergeRectListForHeight
+  MergeRectListForThree
+  
