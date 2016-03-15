@@ -131,6 +131,8 @@ BEGIN_MESSAGE_MAP(CPistonRingDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_PLC32772, &CPistonRingDlg::OnPlcSetting)
 
+	ON_BN_CLICKED(IDC_BUTTON_Run, &CPistonRingDlg::OnBnClickedButtonRun)
+	ON_BN_CLICKED(IDC_BUTTON_Stop, &CPistonRingDlg::OnBnClickedButtonStop)
 END_MESSAGE_MAP()
 
 
@@ -170,12 +172,11 @@ BOOL CPistonRingDlg::OnInitDialog()
 	oldFSP[0] = 1350;
 	oldFSP[1] = 768;
 	ShowWindow(SW_MAXIMIZE);
-
 	//设置窗口字体
 	MyEditFontSet();
-
 	//通讯初始化
 	g_CommXDM.OpenMyComm(1);
+	//载入mask图片，用于检测漏光
 	m_maskImage = cvLoadImage("00.bmp", 0);
 	
 	//相机初始化
@@ -237,8 +238,7 @@ void CPistonRingDlg::OnPaint()
 	}
 }
 
-//当用户拖动最小化窗口时系统调用此函数取得光标
-//显示。
+//当用户拖动最小化窗口时系统调用此函数取得光标显示。
 HCURSOR CPistonRingDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -301,8 +301,7 @@ BOOL CPistonRingDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-
-//颜色设置
+//标签颜色设置
 HBRUSH CPistonRingDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
@@ -334,7 +333,7 @@ HBRUSH CPistonRingDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return hbr;
 }
 
-//尺寸设置
+//设置窗口尺寸设置
 void CPistonRingDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
@@ -373,7 +372,7 @@ void CPistonRingDlg::OnSize(UINT nType, int cx, int cy)
 	}
 }
 
-//标签字体大小设置
+//设置标签字体大小
 void CPistonRingDlg::DialogFontSetting(CDC* pDC, int nPointSet)
 {
 	mLableStateFont.CreatePointFont(nPointSet, L"宋体");
@@ -381,7 +380,7 @@ void CPistonRingDlg::DialogFontSetting(CDC* pDC, int nPointSet)
 	mLableStateFont.DeleteObject();
 }
 
-//设置Edit字体
+//设置Edit字体大小
 void CPistonRingDlg::MyEditFontSet()
 {
 	mMyEditFont.CreatePointFont(250, L"宋体");
@@ -540,50 +539,6 @@ void CPistonRingDlg::OnPlcSetting()
 	myPlC->Create(IDD_PLC, this);
 	myPlC->ShowWindow(SW_SHOW);
 }
-
-
-//创建通用线程
-CWinThread* CPistonRingDlg::ThreadCreate(
-	AFX_THREADPROC pfnThreadProc,
-	SerialComm* pComm,
-	CCriticalSection* pCsComm,
-	CameraBasler* pCamera,
-	CCriticalSection* pCsCamera,
-	bool* pRun,
-	DWORD time)
-{
-	ThreadParms* parms = new ThreadParms;
-	parms->hWnd = m_hWnd;
-	parms->pCamera = pCamera;
-	parms->pComm = pComm;
-	parms->pCsCamera = pCsCamera;
-	parms->pCsComm = pCsComm;
-	parms->pRun = pRun;
-	parms->time = time;
-
-	return AfxBeginThread(pfnThreadProc, (LPVOID)parms);
-}
-
-//创建相机初始化线程
-void CPistonRingDlg::CameraInitCreate(
-	CameraBasler* pCamera,
-	String_t cameraString,
-	double exposureTime,
-	double frameRate,
-	int64_t width,
-	int64_t height)
-{
-	CameraInitParams* parms = new CameraInitParams;
-	parms->hWnd = m_hWnd;
-	parms->pCamera = pCamera;
-	parms->cameraString = cameraString;
-	parms->exposureTime = exposureTime;
-	parms->frameRate = frameRate;
-	parms->width = width;
-	parms->height = height;
-
-}
-
 
 //图片采集线程
 UINT ThreadCameraGrab(LPVOID pParam)
@@ -809,4 +764,17 @@ UINT ThreadRunState(LPVOID pParam)
 		Sleep(10);
 	}
 	return 0;
+}
+
+//启动运行
+void CPistonRingDlg::OnBnClickedButtonRun()
+{
+	
+
+}
+
+//停止运行
+void CPistonRingDlg::OnBnClickedButtonStop()
+{
+	
 }

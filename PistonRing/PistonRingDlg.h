@@ -139,6 +139,8 @@ public:
 	UINT m_OKCount;
 	UINT m_LeakeyCount;
 	UINT m_ClearanceCount;
+	afx_msg void OnBnClickedButtonRun();
+	afx_msg void OnBnClickedButtonStop();
 };
 
 //多线程传递参数
