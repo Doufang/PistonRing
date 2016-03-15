@@ -100,34 +100,6 @@ public:
 	float oldFSP[2];		//用于记录窗体的原始大小
 	CFont *mLableStateFont, mMyEditFont;	
 
-	//窗口相关控件变量的定义
-public:
-	//控件变量
-	CEdit mControlFeedingOKNumber;
-	CEdit mControlFeedingNGNumber;
-	CEdit mControlClearanceOKNumber;
-	CEdit mControlClearanceNGNumber;
-
-	//开关变量
-	int mValueFeedingSystemSwitch;		// 上料系统开关
-	int mValueLeakySystemSwitch;		// 漏光检测系统开关
-	int mValueClearanceSystemSwitch;	// 间隙检测系统开关
-	int mValueUnloadingSystemSwith;		// 下料系统开关
-	int mValueRotarySystemSwitch;		// 旋转系统开关
-
-	//计数变量
-	UINT mValueFeedingOKNumber;
-	int mValueFeedingNGNumber;
-	UINT mValueClearanceOKNumber;
-	UINT mValueClearanceNGNumber;
-
-	//漏光检测显示
-	CString m_LeakyCheckResult;
-	//定位显示
-	CString m_PositionResult;
-	//间隙检测显示
-	CString m_ClearanceCheckResult;
-
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
@@ -156,25 +128,7 @@ public:
 
 public:
 	PLCSetting* myPlC;
-	afx_msg void OnPlcSetting();
-	afx_msg void OnBnClickedRadio2();
-	afx_msg void OnBnClickedRadio1();
-	afx_msg void OnBnClickedRadio4();
-	afx_msg void OnBnClickedRadio3();
-	afx_msg void OnBnClickedRadio6();
-	afx_msg void OnBnClickedRadio5();
-	afx_msg void OnBnClickedRadio8();
-	afx_msg void OnBnClickedRadio7();
-	afx_msg void OnBnClickedRadio10();
-	afx_msg void OnBnClickedRadio9();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
-	afx_msg void OnBnClickedButton3();
-	afx_msg void OnBnClickedButton4();
-	afx_msg void OnBnClickedButton9();
-	afx_msg void OnBnClickedButton10();
-	afx_msg void OnBnClickedButton11();
-	afx_msg void OnBnClickedButton12();
+	afx_msg void OnPlcSetting();	
 
 	//线程消息
 protected:
